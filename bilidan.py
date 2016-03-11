@@ -53,8 +53,8 @@ import zlib
 
 USER_AGENT_PLAYER = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0'
 USER_AGENT_API = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0'
-APPKEY = '85eb6835b0a1034e'  # The same key as in original Biligrab
-APPSEC = '2ad42749773c441109bdc0191257a664'  # Do not abuse please, get one yourself if you need
+APPKEY = '876fe0ebd0e67a0f'  # The same key as in original Biligrab
+APPSEC = 'f487b808dc82abb7464a00935d4bb247'  # Do not abuse please, get one yourself if you need
 BILIGRAB_HEADER = {'User-Agent': USER_AGENT_API, 'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
 
 
@@ -88,7 +88,6 @@ def biligrab(url, *, debug=False, verbose=False, media=None, comment=None, cooki
         Return value: {'cid': cid, 'title': title}
         '''
         req_args = {'type': 'json', 'appkey': APPKEY, 'id': aid, 'page': pid}
-        req_args['sign'] = bilibili_hash(req_args)
         _, response = fetch_url(url_get_metadata+urllib.parse.urlencode(req_args), user_agent=USER_AGENT_API, cookie=cookie)
         try:
             response = dict(json.loads(response.decode('utf-8', 'replace')))

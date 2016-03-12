@@ -54,7 +54,6 @@ import zlib
 USER_AGENT_PLAYER = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0'
 USER_AGENT_API = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0'
 APPKEY = '876fe0ebd0e67a0f'  # The same key as in original Biligrab
-APPSEC = 'f487b808dc82abb7464a00935d4bb247'  # Do not abuse please, get one yourself if you need
 BILIGRAB_HEADER = {'User-Agent': USER_AGENT_API, 'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}
 
 
@@ -111,7 +110,6 @@ def biligrab(url, *, debug=False, verbose=False, media=None, comment=None, cooki
             req_args = {'appkey': APPKEY, 'cid': cid}
             if quality is not None:
                 req_args['quality'] = quality
-            req_args['sign'] = bilibili_hash(req_args)
             _, response = fetch_url(url_get_media+urllib.parse.urlencode(req_args), user_agent=user_agent, cookie=cookie, fakeip=fakeip)
             media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(response.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
             if not fuck_you_bishi_mode and media_urls == ['http://static.hdslb.com/error.mp4']:
@@ -339,16 +337,6 @@ def fetch_url(url, *, user_agent=USER_AGENT_PLAYER, cookie=None, fakeip=None):
     else:
         data = response.read()
     return response, data
-
-
-def bilibili_hash(args):
-    '''Calculate API signature hash
-
-    Arguments: {request_paramter: value}
-
-    Return value: hash_value -> str
-    '''
-    return hashlib.md5((urllib.parse.urlencode(sorted(args.items()))+APPSEC).encode('utf-8')).hexdigest()  # Fuck you bishi
 
 
 def check_env(debug=False):
